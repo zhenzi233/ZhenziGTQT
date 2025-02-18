@@ -26,10 +26,14 @@ import org.lwjgl.Sys;
 public class MultiQuantumStorageRenderer extends QuantumStorageRenderer {
     @SideOnly(Side.CLIENT)
 
-    public static void renderMultiTankFluid(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline, FluidTank[] tanks, IBlockAccess world, BlockPos pos, EnumFacing frontFacing, Cuboid6 partialFluidBox, double fluidHigh, Cuboid6 gasPartialFluidBox, double gasHigh) {
+    public static void renderMultiTankFluid(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline, FluidTank[] tanks, IBlockAccess world, BlockPos pos, EnumFacing frontFacing, Cuboid6 partialFluidBox, double fluidHigh, Cuboid6 gasPartialFluidBox, double gasHigh, int tankAmount) {
         partialFluidBox = new Cuboid6(0.06640625, 0.12890625, 0.06640625, 0.93359375, 0.93359375, 0.93359375);
         gasPartialFluidBox = new Cuboid6(0.06640625, 0.12890625, 0.06640625, 0.93359375, 0.83359375, 0.93359375);
-        for (int i = 0; i < 4; i++)
+        if (tankAmount == 0)
+        {
+            return;
+        }
+        for (int i = 0; i < tankAmount; i++)
         {
             FluidStack stack = tanks[i].getFluid();
             if (stack != null && stack.amount != 0 && ConfigHolder.client.enableFancyChestRender) {
@@ -39,9 +43,10 @@ public class MultiQuantumStorageRenderer extends QuantumStorageRenderer {
                         renderState.setBrightness(world, pos);
                     }
                     boolean gas = fluid.isGaseous(stack);
+                    double fraction = 100 * 0.1 / tankAmount;
                     if (gas) {
                         double gasFillFraction = (double)stack.amount / (double)tanks[i].getCapacity();
-                        gasHigh = Math.min(2.5 * gasFillFraction + 0.25, 3.0) / 16.0;
+                        gasHigh = Math.min(fraction * gasFillFraction + 0.25, 3.0) / 16.0;
                         gasPartialFluidBox.min.y = gasPartialFluidBox.max.y - gasHigh;
                         renderState.setFluidColour(stack);
                         ResourceLocation fluidStill = fluid.getStill(stack);
@@ -50,7 +55,7 @@ public class MultiQuantumStorageRenderer extends QuantumStorageRenderer {
                         Textures.renderFace(renderState, translation, pipeline, EnumFacing.DOWN, gasPartialFluidBox, fluidStillSprite, BlockRenderLayer.CUTOUT_MIPPED);
                     } else {
                         double fillFraction = (double)stack.amount / (double)tanks[i].getCapacity();
-                        fluidHigh = Math.min(2.5 * fillFraction + 0.25, 13.0) / 16.0;
+                        fluidHigh = Math.min(fraction * fillFraction + 0.25, 13.0) / 16.0;
                         partialFluidBox.max.y = partialFluidBox.min.y + fluidHigh;
                         renderState.setFluidColour(stack);
                         ResourceLocation fluidStill = fluid.getStill(stack);

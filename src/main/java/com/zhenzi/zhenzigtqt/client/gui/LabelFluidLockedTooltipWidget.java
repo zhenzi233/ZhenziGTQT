@@ -5,6 +5,7 @@ import gregtech.api.gui.widgets.LabelWidget;
 import gregtech.api.util.LocalizationUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -31,11 +32,12 @@ public class LabelFluidLockedTooltipWidget extends LabelWidget {
         if (!this.hideTooltip && !this.gui.isJEIHandled && this.isMouseOverElement(mouseX, mouseY)) {
             List<String> tooltips = new ArrayList();
             tooltips.add(LocalizationUtils.format("zhenzigtqt.gui.fluid_lock", new Object[0]));
-            for (int i = 0; i < this.stacks.length; i++)
+            FluidStack[] fluidStacks = this.stacks == null ? new FluidStack[1] : this.stacks;
+            for (int i = 0; i < fluidStacks.length; i++)
             {
-                if(this.stacks[i] != null && this.stacks[i].getFluid() != null)
+                if(fluidStacks[i] != null && fluidStacks[i].getFluid() != null)
                 {
-                    tooltips.add( i + 1 + "." + this.stacks[i].getFluid().getLocalizedName(this.stacks[i]));
+                    tooltips.add( i + 1 + "." + fluidStacks[i].getFluid().getLocalizedName(fluidStacks[i]));
                 }   else
                 {
                     tooltips.add( i + 1 + "." + "EMPTY");

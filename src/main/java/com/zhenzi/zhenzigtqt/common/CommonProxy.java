@@ -5,7 +5,7 @@ import com.zhenzi.zhenzigtqt.common.block.ZhenziGTQTMetaBlocks;
 import com.zhenzi.zhenzigtqt.common.metatileentity.ZhenziGTQTMetaTileEntity;
 import com.zhenzi.zhenzigtqt.loaders.RecipeManager;
 import gregtech.api.block.VariantItemBlock;
-import keqing.pollution.loaders.RecipeManger;
+//import keqing.pollution.loaders.RecipeManger;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
