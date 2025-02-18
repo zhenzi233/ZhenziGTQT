@@ -179,8 +179,8 @@ dependencies {
 
     implementation rfg.deobf(files("libs/Guide-API-1.12-2.1.8-63.jar"))
     implementation rfg.deobf(files("libs/modularui-2.4.3.jar"))
-    implementation rfg.deobf(files("libs/Pollution-1.0.jar"))
-    implementation rfg.deobf(files("libs/gtqtcore-1.0.jar"))
+//    implementation rfg.deobf(files("libs/Pollution-1.0.jar"))
+//    implementation rfg.deobf(files("libs/gtqtcore-1.0.jar"))
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

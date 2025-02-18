@@ -7,6 +7,7 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import com.zhenzi.zhenzigtqt.client.gui.LabelFluidLockedTooltipWidget;
+import com.zhenzi.zhenzigtqt.client.render.HologramRender;
 import com.zhenzi.zhenzigtqt.client.render.texture.custom.MultiQuantumStorageRenderer;
 import gregtech.api.capability.*;
 import gregtech.api.capability.impl.FilteredItemHandler;
@@ -336,6 +337,9 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
                 MultiQuantumStorageRenderer.renderTankAmount(x, y - 0.15 + i * 0.15, z, this.getFrontFacing(), (long)this.fluidTanks[i].getFluid().amount);
             }
         }
+
+//        HologramRender hologramRender = new HologramRender();
+//        hologramRender.renderMetaTileEntity(x, y, z, partialTicks, this.frontFacing);
     }
 
     //检测超级缸的tank是否为空
