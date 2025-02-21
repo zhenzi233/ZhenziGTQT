@@ -1,9 +1,18 @@
 zhenzigtqt.gui.fluid_lock=被锁定的流体:
+zhenzigtqt.gui.changelock.disabled=切换锁定界面
+zhenzigtqt.gui.changelock.enabled=切换流体界面
 
 zhenzigtqt.machine.multi_quantum_tank_lv.name=四重超级缸 I
 zhenzigtqt.machine.multi_quantum_tank_mv.name=四重超级缸 II
 zhenzigtqt.machine.multi_quantum_tank_hv.name=四重超级缸 III
 zhenzigtqt.machine.multi_quantum_tank_ev.name=九重超级缸 I
 zhenzigtqt.machine.multi_quantum_tank_iv.name=九重超级缸 II
+
+zhenzigtqt.machine.multi_quantum_tank_iv1.name=十六重量子缸 I
+zhenzigtqt.machine.multi_quantum_tank_luv.name=十六重量子缸 II
+zhenzigtqt.machine.multi_quantum_tank_zpm.name=十六重量子缸 II
+zhenzigtqt.machine.multi_quantum_tank_uv.name=二十五重量子缸 I
+zhenzigtqt.machine.multi_quantum_tank_uhv.name=二十五重量子缸 II
+
 
 

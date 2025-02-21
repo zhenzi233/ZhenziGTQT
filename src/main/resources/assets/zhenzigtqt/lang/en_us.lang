@@ -1,4 +1,6 @@
 zhenzigtqt.gui.fluid_lock=Locked Fluids:
+zhenzigtqt.gui.changelock.disabled=Change Lock
+zhenzigtqt.gui.changelock.enabled=Change Fluid
 
 zhenzigtqt.machine.multi_quantum_tank_lv.name=Quadruper Super Tank I
 zhenzigtqt.machine.multi_quantum_tank_mv.name=Quadruper Super Tank II
@@ -6,4 +8,9 @@ zhenzigtqt.machine.multi_quantum_tank_hv.name=Quadruper Super Tank III
 zhenzigtqt.machine.multi_quantum_tank_ev.name=Kuju Super Tank I
 zhenzigtqt.machine.multi_quantum_tank_iv.name=Kuju Super Tank II
 
+zhenzigtqt.machine.multi_quantum_tank_iv1.name=Sixteen-fold Quantum Tank I
+zhenzigtqt.machine.multi_quantum_tank_luv.name=Sixteen-fold Quantum Tank II
+zhenzigtqt.machine.multi_quantum_tank_zpm.name=Sixteen-fold Quantum Tank III
+zhenzigtqt.machine.multi_quantum_tank_uv.name=Twenty-five Quantum Tank I
+zhenzigtqt.machine.multi_quantum_tank_uhv.name=Twenty-five Quantum Tank II
 

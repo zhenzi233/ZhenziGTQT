@@ -7,6 +7,8 @@ import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import com.zhenzi.zhenzigtqt.client.gui.LabelFluidLockedTooltipWidget;
+import com.zhenzi.zhenzigtqt.client.gui.MultiQuantumTankMainWidget;
+import com.zhenzi.zhenzigtqt.client.gui.MultiQuantumTankWidget;
 import com.zhenzi.zhenzigtqt.client.render.HologramRender;
 import com.zhenzi.zhenzigtqt.client.render.texture.custom.MultiQuantumStorageRenderer;
 import gregtech.api.capability.*;
@@ -18,6 +20,7 @@ import gregtech.api.cover.CoverRayTracer;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.resources.IGuiTexture;
+import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.gui.widgets.*;
 import gregtech.api.items.itemhandlers.GTItemStackHandler;
 import gregtech.api.metatileentity.IFastRenderMetaTileEntity;
@@ -26,6 +29,8 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
+import gregtech.api.util.Position;
+import gregtech.api.util.Size;
 import gregtech.api.util.function.BooleanConsumer;
 import gregtech.client.renderer.texture.Textures;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -75,8 +80,9 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
     protected @Nullable FluidStack[] previousFluids;
     //储存被锁定的液体
     protected FluidStack[] lockedFluids;
+    protected FluidTank[] lockedTank;
 //    protected boolean locked;
-    protected boolean voiding;
+    protected static boolean voiding;
     protected IFluidHandler[] fluidInventorys;
     private String lockedFluidtext;
     private int tankAmount;
@@ -92,6 +98,11 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
 
     public int getTier() {
         return tier;
+    }
+
+    public FluidTank[] getLockTanks()
+    {
+        return this.lockedTank;
     }
 
     //初始化
@@ -110,6 +121,7 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
 
         this.importFluids = new FluidTankList(false, this.fluidTanks);
         this.exportFluids = new FluidTankList(false, this.fluidTanks);
+        this.lockedTank = new FluidTank[this.fluidTanks.length];
         this.outputFluidInventory = new FluidHandlerProxy(new FluidTankList(false), exportFluids);
 
         this.previousFluids = new FluidStack[this.fluidTanks.length];
@@ -297,12 +309,16 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
 
     //超级缸的物品输入槽逻辑，但无法实现根据槽的位置来输出特定的液体
     protected IItemHandlerModifiable createImportItemHandler() {
+        if (this.tankAmount == 16) return new FilteredItemHandler(this, 8).setFillPredicate(FilteredItemHandler.getCapabilityFilter(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
+        if (this.tankAmount == 25) return new FilteredItemHandler(this, 10).setFillPredicate(FilteredItemHandler.getCapabilityFilter(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
         return new FilteredItemHandler(this, this.tankAmount).setFillPredicate(FilteredItemHandler.getCapabilityFilter(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
     }
 
 
 
     protected IItemHandlerModifiable createExportItemHandler() {
+        if (this.tankAmount == 16) return new GTItemStackHandler(this, 8);
+        if (this.tankAmount == 25) return new GTItemStackHandler(this, 10);
         return new GTItemStackHandler(this, this.tankAmount);
     }
 
@@ -404,66 +420,81 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
         }   else if (this.tankAmount == 9)
         {
             builder = this.create9SlotUI(entityPlayer);
+        }   else if (this.tankAmount == 16)
+        {
+            builder = this.create16SlotUI(entityPlayer);
+        }   else if (this.tankAmount == 25)
+        {
+            builder = this.create25SlotUI(entityPlayer);
         }
         return builder.build(this.getHolder(), entityPlayer);
+    }
+
+    public ToggleButtonWidget createOUTPUTui(int x, int y){
+        return new ToggleButtonWidget(x, y, 18, 18, GuiTextures.BUTTON_FLUID_OUTPUT, this::isAutoOutputFluids, this::setAutoOutputFluids).setTooltipText("gregtech.gui.fluid_auto_output.tooltip", new Object[0]).shouldUseBaseBackground();
+    }
+
+    public ToggleButtonWidget createVoidUi(int x, int y){
+        return new ToggleButtonWidget(x, y, 18, 18, GuiTextures.BUTTON_FLUID_VOID, this::isVoiding, this::setVoiding).setTooltipText("gregtech.gui.fluid_voiding.tooltip", new Object[0]).shouldUseBaseBackground();
+    }
+
+    public MuitlQuantumFluidTank[] getFluidTanks()
+    {
+        return this.fluidTanks;
+    }
+
+    public FluidStack[] getLockedFluids()
+    {
+        return this.lockedFluids;
     }
 
     private ModularUI.Builder create4SlotUI(EntityPlayer entityPlayer)
     {
         ModularUI.Builder builder = ModularUI.defaultBuilder();
 
-        builder.widget(new ImageWidget(7, 16, 81, 46, GuiTextures.DISPLAY))
-                .widget((new ToggleButtonWidget(7, 64, 18, 18, GuiTextures.BUTTON_FLUID_OUTPUT, this::isAutoOutputFluids, this::setAutoOutputFluids)).setTooltipText("gregtech.gui.fluid_auto_output.tooltip", new Object[0]).shouldUseBaseBackground())
-                .widget((new ToggleButtonWidget(25, 64, 18, 18, GuiTextures.BUTTON_FLUID_VOID, this::isVoiding, this::setVoiding)).setTooltipText("gregtech.gui.fluid_voiding.tooltip", new Object[0]).shouldUseBaseBackground()).bindPlayerInventory(entityPlayer.inventory);
-        for (int i = 0; i < this.fluidTanks.length; i++) {
-            builder.widget(this.createTankWidget(this.fluidTanks[i], i, 10 + i * 18, 43, 18, 18));
-            builder.widget(this.createContainerSlot(i, 92  + i * 18, 17));
-            builder.widget(this.createSlot(i, 92  + i * 18, 44));
-            int finalI = i;
-            builder.widget(this.createLockedButton(92  + i * 18, 64, () -> this.fluidTanks[finalI].isLocked,
-                    (flag) -> {
-                        this.setIsLocked(flag, this.fluidTanks[finalI]);
-                        this.writeLockedFluids(finalI);
-                        this.markDirty();
-                    }));
-        }
-        builder.widget(new LabelFluidLockedTooltipWidget(11, 20, "Locked Fluid", this.lockedFluids));
+        MultiQuantumTankMainWidget mainWidget = new MultiQuantumTankMainWidget(0, 0, this, 4);
+
+        builder.widget(mainWidget).bindPlayerInventory(entityPlayer.inventory);
+
         return builder;
     }
 
     private ModularUI.Builder create9SlotUI(EntityPlayer entityPlayer)
     {
+        ModularUI.Builder builder = ModularUI.defaultBuilder(8);
+
+        MultiQuantumTankMainWidget mainWidget = new MultiQuantumTankMainWidget(0, 0, this, 9);
+
+        builder.widget(mainWidget).bindPlayerInventory(entityPlayer.inventory, 90);
+        return builder;
+    }
+
+    private ModularUI.Builder create16SlotUI(EntityPlayer entityPlayer){
         ModularUI.Builder builder = ModularUI.defaultBuilder(28);
 
-        builder.widget(new ImageWidget(7, 8, 81, 16, GuiTextures.DISPLAY))
-                .widget((new ToggleButtonWidget(151, 8, 18, 18, GuiTextures.BUTTON_FLUID_OUTPUT, this::isAutoOutputFluids, this::setAutoOutputFluids)).setTooltipText("gregtech.gui.fluid_auto_output.tooltip", new Object[0]).shouldUseBaseBackground())
-                .widget((new ToggleButtonWidget(133, 8, 18, 18, GuiTextures.BUTTON_FLUID_VOID, this::isVoiding, this::setVoiding)).setTooltipText("gregtech.gui.fluid_voiding.tooltip", new Object[0]).shouldUseBaseBackground());
-        for (int i = 0; i < this.fluidTanks.length; i++) {
-            builder.widget(this.createTankWidget(this.fluidTanks[i], i, 7 + i * 18, 28, 18, 18));
-            builder.widget(this.createContainerSlot(i, 7  + i * 18, 48));
-            builder.widget(this.createSlot(i, 7  + i * 18, 68));
-            int finalI = i;
-            builder.widget(this.createLockedButton(7  + i * 18, 88, () -> this.fluidTanks[finalI].isLocked,
-                    (flag) -> {
-                        this.setIsLocked(flag, this.fluidTanks[finalI]);
-                        this.writeLockedFluids(finalI);
-                        this.markDirty();
-                    }));
-        }
-        builder.widget(new LabelFluidLockedTooltipWidget(11, 10, "Locked Fluid", this.lockedFluids));
-        builder.bindPlayerInventory(entityPlayer.inventory, 110);
+        MultiQuantumTankMainWidget mainWidget = new MultiQuantumTankMainWidget(0, 0, this, 16);
+        builder.widget(mainWidget).bindPlayerInventory(entityPlayer.inventory, 90 + 18);
+        return builder;
+    }
+
+    private ModularUI.Builder create25SlotUI(EntityPlayer entityPlayer){
+        ModularUI.Builder builder = ModularUI.defaultBuilder(28 + 18);
+
+        MultiQuantumTankMainWidget mainWidget = new MultiQuantumTankMainWidget(0, 0, this, 25);
+
+        builder.widget(mainWidget).bindPlayerInventory(entityPlayer.inventory, 90 + 18 + 18);
         return builder;
     }
 
     //ui的液体渲染
-    private TankWidget createTankWidget(FluidTank tank, int lockedFluidIndex, int x, int y, int width, int height)
+    public TankWidget createTankWidget(FluidTank tank, int lockedFluidIndex, int x, int y, int width, int height, TextureArea textureArea)
     {
         TankWidget tankWidget = new TankWidget(tank, x, y, width, height).setBackgroundTexture(GuiTextures.FLUID_SLOT).setAlwaysShowFull(true).setDrawHoveringText(false).setContainerClicking(true, true);
         return tankWidget;
     }
 
     //ui的物品输入槽渲染
-    private FluidContainerSlotWidget createContainerSlot(int slot, int x, int y)
+    public FluidContainerSlotWidget createContainerSlot(int slot, int x, int y)
     {
         FluidContainerSlotWidget containerSlotWidget = new FluidContainerSlotWidget(this.importItems, slot, x, y, false);
         containerSlotWidget.setBackgroundTexture(new IGuiTexture[]{GuiTextures.SLOT, GuiTextures.IN_SLOT_OVERLAY});
@@ -471,14 +502,14 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
     }
 
     //ui的物品输出槽渲染
-    private SlotWidget createSlot(int slot, int x, int y)
+    public SlotWidget createSlot(int slot, int x, int y)
     {
         SlotWidget slotWidget = new SlotWidget(this.exportItems, slot, x, y, true, false);
         slotWidget.setBackgroundTexture(new IGuiTexture[]{GuiTextures.SLOT, GuiTextures.OUT_SLOT_OVERLAY});
         return slotWidget;
     }
 
-    private ToggleButtonWidget createLockedButton(int x, int y, BooleanSupplier isPressedCondition, BooleanConsumer setPressedExecutor)
+    public ToggleButtonWidget createLockedButton(int x, int y, BooleanSupplier isPressedCondition, BooleanConsumer setPressedExecutor)
     {
         ToggleButtonWidget Lock = new ToggleButtonWidget(x, y, 18, 18, GuiTextures.BUTTON_LOCK, isPressedCondition, setPressedExecutor)
                 .setTooltipText("gregtech.gui.fluid_lock.tooltip", new Object[0]).shouldUseBaseBackground();
@@ -616,6 +647,7 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
             for (int i = 0; i < this.fluidTanks.length; i++) {
                 this.fluidTanks[i].setFluid(FluidStack.loadFluidStackFromNBT(buf.readCompoundTag()));
                 this.lockedFluids[i] = FluidStack.loadFluidStackFromNBT(buf.readCompoundTag());
+                this.fluidTanks[i].setLockedFluid(this.lockedFluids[i]);
             }
         } catch (IOException var3) {
             GTLog.logger.warn("Failed to load fluid from NBT in a quantum tank at " + this.getPos() + " on initial server/client sync");
@@ -716,8 +748,9 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
     }
 
     //发包
-    private void writeLockedFluids(int index)
+    public void writeLockedFluids(int index)
     {
+//        this.fluidTanks[index].setLockedFluid(this.fluidTanks[index].getFluid());
         this.writeCustomData(GregtechDataCodes.UPDATE_LOCKED_STATE, (buf ->
         {
             buf.writeInt(index);
@@ -776,6 +809,16 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
         return 0;
     }
 
+    public MuitlQuantumFluidTank getTankAt(int index)
+    {
+        return this.fluidTanks[index];
+    }
+
+    public void setTankAt(int index, MuitlQuantumFluidTank tank)
+    {
+        this.fluidTanks[index] = tank;
+    }
+
     //设置某个tank的锁定状态
     public void setIsLocked(boolean locked, MuitlQuantumFluidTank tank)
     {
@@ -793,14 +836,16 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
     }
 
     //专门写了处理锁定逻辑的tank
-    public class MuitlQuantumFluidTank extends FluidTank implements IFilteredFluidContainer, IFilter<FluidStack> {
+    public static class MuitlQuantumFluidTank extends FluidTank implements IFilteredFluidContainer, IFilter<FluidStack> {
 
-        public int lockId;
+        protected int lockId;
         public boolean isLocked;
-        public FluidStack lockedFluid;
+        protected FluidStack lockedFluid;
+        protected FluidTank lockedTank;
         public MuitlQuantumFluidTank(int capacity, int lockId) {
             super(capacity);
             this.lockId = lockId;
+            this.lockedTank = new FluidTank(1000);
         }
 
         @Override
@@ -862,6 +907,10 @@ public class MetaTileEntityMultiQuantumTank extends MetaTileEntity implements IT
         public void setLockedFluid(FluidStack stack)
         {
             this.lockedFluid = stack;
+        }
+        public FluidTank getLockedTank()
+        {
+            return this.lockedTank;
         }
     }
 
