@@ -2,6 +2,14 @@ zhenzigtqt.gui.fluid_lock=被锁定的流体:
 zhenzigtqt.gui.changelock.disabled=切换锁定界面
 zhenzigtqt.gui.changelock.enabled=切换流体界面
 
+zhenzigtqt.gui.aspect_amount=源质总量：
+
+zhenzigtqt.machine.aspect_tank.tooltip=申必的GT
+zhenzigtqt.universal.tooltip.aspect_storage_capacity=§5源质容量：§f%,d 魔力水晶碎片
+zhenzigtqt.universal.tooltip.aspect_storage=§9内含源质：§f%2$,d 魔力水晶碎片 %1$s
+zhenzigtqt.universal.tooltip.aspect_locked=§f%1$s §c已被锁定！
+zhenzigtqt.machine.aspect_tank.help=可以将§d源质安瓿§r或§b源质罐子§r等能§6储存源质的容器§r放入输入槽来存储源质
+
 zhenzigtqt.machine.multi_quantum_tank_lv.name=四重超级缸 I
 zhenzigtqt.machine.multi_quantum_tank_mv.name=四重超级缸 II
 zhenzigtqt.machine.multi_quantum_tank_hv.name=四重超级缸 III
@@ -14,5 +22,13 @@ zhenzigtqt.machine.multi_quantum_tank_zpm.name=十六重量子缸 II
 zhenzigtqt.machine.multi_quantum_tank_uv.name=二十五重量子缸 I
 zhenzigtqt.machine.multi_quantum_tank_uhv.name=二十五重量子缸 II
 
-
+zhenzigtqt.machine.aspect_tank_lv.name=超级源质缸 I
+zhenzigtqt.machine.aspect_tank_mv.name=超级源质缸 II
+zhenzigtqt.machine.aspect_tank_hv.name=超级源质缸 III
+zhenzigtqt.machine.aspect_tank_ev.name=超级源质缸 IV
+zhenzigtqt.machine.aspect_tank_iv.name=量子源质缸 I
+zhenzigtqt.machine.aspect_tank_luv.name=量子源质缸 II
+zhenzigtqt.machine.aspect_tank_zpm.name=量子源质缸 III
+zhenzigtqt.machine.aspect_tank_uv.name=量子源质缸 IV
+zhenzigtqt.machine.aspect_tank_uhv.name=量子源质缸 V
 

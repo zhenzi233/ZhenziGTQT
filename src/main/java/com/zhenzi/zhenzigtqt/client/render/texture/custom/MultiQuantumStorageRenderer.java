@@ -69,9 +69,6 @@ public class MultiQuantumStorageRenderer extends QuantumStorageRenderer {
                     //堆叠液体效果
                     if (gas) gasPartialFluidBox.max.y = gasPartialFluidBox.min.y;
                     else partialFluidBox.min.y = partialFluidBox.max.y;
-
-
-
                 }
             }
         }

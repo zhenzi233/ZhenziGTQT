@@ -2,6 +2,14 @@ zhenzigtqt.gui.fluid_lock=Locked Fluids:
 zhenzigtqt.gui.changelock.disabled=Change Lock
 zhenzigtqt.gui.changelock.enabled=Change Fluid
 
+zhenzigtqt.gui.aspect_amount=Aspect Amount：
+
+zhenzigtqt.machine.aspect_tank.tooltip=Aspect Tank
+zhenzigtqt.universal.tooltip.aspect_storage_capacity=§5Max Capacity:§f%,d Ce
+zhenzigtqt.universal.tooltip.aspect_storage=§9Stored Aspect:§f%2$,d Ce %1$s
+zhenzigtqt.universal.tooltip.aspect_locked=§f%1$s §cis Locked!
+zhenzigtqt.machine.aspect_tank.help=可以将§d源质安瓿§r或§b源质罐子§r等能§6储存源质的容器§r放入输入槽来存储源质
+
 zhenzigtqt.machine.multi_quantum_tank_lv.name=Quadruper Super Tank I
 zhenzigtqt.machine.multi_quantum_tank_mv.name=Quadruper Super Tank II
 zhenzigtqt.machine.multi_quantum_tank_hv.name=Quadruper Super Tank III
@@ -13,4 +21,15 @@ zhenzigtqt.machine.multi_quantum_tank_luv.name=Sixteen-fold Quantum Tank II
 zhenzigtqt.machine.multi_quantum_tank_zpm.name=Sixteen-fold Quantum Tank III
 zhenzigtqt.machine.multi_quantum_tank_uv.name=Twenty-five Quantum Tank I
 zhenzigtqt.machine.multi_quantum_tank_uhv.name=Twenty-five Quantum Tank II
+
+zhenzigtqt.machine.aspect_tank_lv.name=Super Aspect Tank I
+zhenzigtqt.machine.aspect_tank_mv.name=Super Aspect Tank II
+zhenzigtqt.machine.aspect_tank_hv.name=Super Aspect Tank III
+zhenzigtqt.machine.aspect_tank_ev.name=Super Aspect Tank IV
+zhenzigtqt.machine.aspect_tank_iv.name=Quantum Aspect Tank I
+zhenzigtqt.machine.aspect_tank_luv.name=Quantum Aspect Tank II
+zhenzigtqt.machine.aspect_tank_zpm.name=Quantum Aspect Tank III
+zhenzigtqt.machine.aspect_tank_uv.name=Quantum Aspect Tank IV
+zhenzigtqt.machine.aspect_tank_uhv.name=Quantum Aspect Tank V
+
 
