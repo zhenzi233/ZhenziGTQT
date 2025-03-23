@@ -32,3 +32,12 @@ zhenzigtqt.machine.aspect_tank_zpm.name=量子源质缸 III
 zhenzigtqt.machine.aspect_tank_uv.name=量子源质缸 IV
 zhenzigtqt.machine.aspect_tank_uhv.name=量子源质缸 V
 
+zhenzigtqt.machine.aspect_generator.name=源质发电机（WIP)
+zhenzigtqt.machine.clatherate_essence_former.lv.name=电力水合物形成器
+zhenzigtqt.machine.clatherate_essence_former.hv.name=黄铜电力水合物形成器
+zhenzigtqt.machine.clatherate_essence_former.ev.name=神秘电力水合物形成器
+zhenzigtqt.machine.aspect_tankc_lv.name=源质超级缸 I
+
+recipemap.clatherate_essence_former.name=水合物形成器
+recipemap.aspect_generator.name=源质发电机燃料
+

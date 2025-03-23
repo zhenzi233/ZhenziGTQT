@@ -14,7 +14,12 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
-@Mod(modid = "zhenzigtqt", name = "Zhenzi GTQT", version = "1.0.0")
+@Mod(
+        modid = "zhenzigtqt",
+        name = "Zhenzi GTQT",
+        dependencies = "required-after:packagedthaumic;",
+        version = "1.0.0"
+)
 public class ZhenziGtqt {
     public static final String MODID = "zhenzigtqt";
     public static final String NAME = "Zhenzi GTQT";
@@ -44,6 +49,7 @@ public class ZhenziGtqt {
         LOGGER.info("Hello From {}!", NAME);
         ZhenziGTQTMetaBlocks.init();
         ZhenziGTQTMetaTileEntity.initialization();
+        proxy.preInit(event);
     }
 
 }

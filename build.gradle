@@ -181,6 +181,11 @@ dependencies {
     implementation rfg.deobf(files("libs/modularui-2.4.3.jar"))
 //    implementation rfg.deobf(files("libs/Pollution-1.0.jar"))
 //    implementation rfg.deobf(files("libs/gtqtcore-1.0.jar"))
+//    implementation rfg.deobf(files("libs/drtech-V1.0.jar"))
+    implementation rfg.deobf(files("libs/ae2-uel-v0.56.6.jar"))
+    implementation rfg.deobf(files("libs/PackagedAuto-1.12.2-1.0.15.56.jar"))
+    implementation rfg.deobf(files("libs/PackagedThaumic-1.12.2-1.0.2.13.jar"))
+    implementation 'org.jetbrains:annotations:20.1.0'
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'

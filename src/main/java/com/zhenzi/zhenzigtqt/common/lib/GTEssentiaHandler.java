@@ -1,5 +1,8 @@
 package com.zhenzi.zhenzigtqt.common.lib;
 
+import com.zhenzi.zhenzigtqt.common.lib.aspect.AspectStack;
+import com.zhenzi.zhenzigtqt.common.metatileentity.CMetaTileEntityAspectTank;
+import com.zhenzi.zhenzigtqt.common.metatileentity.MetaTileEntityAspectTank;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GTUtility;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +30,34 @@ public class GTEssentiaHandler {
     private static int tick = 0;
 
     public GTEssentiaHandler() {
+    }
+
+    public static AspectStack takeEssentia(MetaTileEntity metaTileEntity, EnumFacing facing, boolean ignoreMirror, int ext)
+    {
+        MetaTileEntity sourceMTE = metaTileEntity;
+        if (sourceMTE instanceof CMetaTileEntityAspectTank)
+        {
+            TileEntity tile = sourceMTE.getNeighbor(facing);
+            if (tile instanceof IAspectSource)
+            {
+                IAspectSource as = (IAspectSource) tile;
+                if ((!ignoreMirror)) {
+                    AspectList ap = as.getAspects();
+
+                    if (ap != null && ap.getAspects() != null && ap.getAspects().length != 0)
+                    {
+                        Aspect aspect = ap.getAspects()[0];
+                        if (aspect != null && as.doesContainerAccept(aspect)  && as.takeFromContainer(aspect, ap.getAmount(aspect))) {
+                            if (ap.aspects != null)
+                            {
+                                return new AspectStack(aspect, ap.getAmount(aspect));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static boolean addEssentiaToTile(MetaTileEntity metaTileEntity, Aspect aspect, EnumFacing facing, boolean ignoreMirror, int ext)

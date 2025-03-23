@@ -6,6 +6,8 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
+import com.zhenzi.zhenzigtqt.common.lib.aspect.AspectStack;
+import com.zhenzi.zhenzigtqt.common.lib.aspect.AspectTank;
 import gregtech.api.gui.resources.TextTexture;
 import gregtech.api.gui.resources.TextureArea;
 import gregtech.api.util.TextFormattingUtil;
@@ -66,6 +68,30 @@ public class AspectStorageRenderer extends QuantumStorageRenderer {
 //        Textures.renderFace(renderState, translation, pipeline, gas ? EnumFacing.DOWN : EnumFacing.UP, partialFluidBox, fluidStillSprite, BlockRenderLayer.CUTOUT_MIPPED);
 //        GlStateManager.resetColor();
 //        renderState.reset();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void renderTankAspect(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline, AspectTank tank, IBlockAccess world, BlockPos pos, EnumFacing frontFacing) {
+        AspectStack stack = tank.getAspectStack();
+        if (stack != null && stack.amount != 0 && ConfigHolder.client.enableFancyChestRender) {
+            Aspect aspect = stack.getAspect();
+            if (aspect != null) {
+                if (world != null) {
+                    renderState.setBrightness(world, pos);
+                }
+
+                Cuboid6 partialFluidBox = new Cuboid6(0.06640625, 0.12890625, 0.06640625, 0.93359375, 0.93359375, 0.93359375);
+                double fillFraction = (double)stack.amount / (double)tank.getCapacity();
+                partialFluidBox.max.y = Math.min(11.875 * fillFraction + 2.0625, 14.0) / 16.0;
+                renderState.baseColour = aspect.getColor() << 8 | 255;
+                TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("thaumcraft:blocks/animatedglow");
+
+                Textures.renderFace(renderState, translation, pipeline, frontFacing, partialFluidBox, icon, BlockRenderLayer.CUTOUT_MIPPED);
+                Textures.renderFace(renderState, translation, pipeline, EnumFacing.UP, partialFluidBox, icon, BlockRenderLayer.CUTOUT_MIPPED);
+                GlStateManager.resetColor();
+                renderState.reset();
+            }
+        }
     }
 
     public static void renderAspectAmount(double x, double y, double z, EnumFacing frontFacing, long amount) {
